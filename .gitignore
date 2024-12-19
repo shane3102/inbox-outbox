@@ -1,5 +1,5 @@
 HELP.md
-inbox-outbox/target/
+target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -67,3 +67,6 @@ nb-configuration.xml
 
 # Plugin directory
 /.quarkus/cli/plugins/
+
+# TODO .env file or sth
+settings.xml

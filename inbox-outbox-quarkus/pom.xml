@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>pl.illchess.messaging</groupId>
+        <groupId>pl.shane3102.messaging</groupId>
         <artifactId>inbox-outbox</artifactId>
         <version>${revision}</version>
     </parent>

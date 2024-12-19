@@ -8,7 +8,7 @@ Biblioteka wspierająca asynchroniczne odbieranie komunikatów pomiędzy serwisa
 
 ```
 <dependency>
-     <groupId>pl</groupId>
+     <groupId>pl.shane3102.messaging</groupId>
      <artifactId>inbox-outbox-quarkus</artifactId>
      <version>${inbox-outbox.version}</version>
 </dependency>

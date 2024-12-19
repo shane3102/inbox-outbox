@@ -8,7 +8,7 @@ Biblioteka wspierająca asynchroniczne odbieranie komunikatów pomiędzy serwisa
 
 ```
 <dependency>
-    <groupId>pl.illchess.messaging</groupId>
+    <groupId>pl.shane3102.messaging</groupId>
     <artifactId>inbox-outbox-spring</artifactId>
     <version>${inbox-outbox.version}</version>
 </dependency>
@@ -17,6 +17,34 @@ Biblioteka wspierająca asynchroniczne odbieranie komunikatów pomiędzy serwisa
 
 <details>
     <summary>Konfiguracja beanów Spring</summary>
+
+Należy zarejestrować beana `InboxOutbox`:
+```java
+@Configuration
+public class InboxOutboxBeanConfiguration extends InboxOutboxConfiguration {
+
+    public InboxOutboxBeanConfiguration(@NotNull ApplicationContext applicationContext) {
+        super(applicationContext);
+    }
+
+    @Bean
+    InboxOutbox inboxOutbox(
+        ScheduledTaskRegistrar scheduledTaskRegistrar,
+        LoadMessages loadMessages,
+        SaveMessage saveMessage,
+        DeleteMessage deleteMessage,
+        ApplicationContext applicationContext
+    ) {
+        return new InboxOutbox(
+            scheduledTaskRegistrar,
+            loadMessages,
+            saveMessage,
+            deleteMessage,
+            applicationContext
+        );
+    }
+}
+```
     
 Zalecana jest implementacja interfejsów `LoadMessages`, `SaveMessage` oraz `DeleteMessage`. 
 Domyślne implementacje działają na podstawie repozytorium in-memory. 

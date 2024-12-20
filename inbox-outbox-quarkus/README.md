@@ -27,7 +27,7 @@ Dependency:
     <summary>Quarkus bean configuration</summary>
 
 It is recommended to implement interfaces `LoadMessages`, `SaveMessage` and `DeleteMessage`
-default implementations are working based on in-memory repository
+default implementations are based on in-memory repository
 
 
 </details>

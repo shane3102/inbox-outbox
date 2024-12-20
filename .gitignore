@@ -68,5 +68,4 @@ nb-configuration.xml
 # Plugin directory
 /.quarkus/cli/plugins/
 
-# TODO .env file or sth
 settings.xml

@@ -27,7 +27,7 @@ Dependency:
 <details>
     <summary>Spring bean configuration</summary>
 
-Bean `InboxOutbox` has to be registered:
+Following configuration extending `InboxOutboxConfiguration` with `InboxOutbox` bean has to be registered:
 ```java
 @Configuration
 public class InboxOutboxBeanConfiguration extends InboxOutboxConfiguration {
@@ -56,7 +56,7 @@ public class InboxOutboxBeanConfiguration extends InboxOutboxConfiguration {
 ```
 
 It is recommended to implement interfaces `LoadMessages`, `SaveMessage` and `DeleteMessage`
-default implementations are working based on in-memory repository
+default implementations are based on in-memory repository
     
 
 </details>
@@ -98,8 +98,6 @@ public class SomeEventHandlerService {
 
 Handing event send to inbox-outbox:
 ```java
-import pl.messaging.inbox.annotation.MessagingAwareComponent;
-
 @Service
 @MessagingAwareComponent
 public class SomeHandlerService {

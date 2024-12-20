@@ -2,7 +2,7 @@
 
 Library for implementing inbox/outbox pattern.
 
-Library has implementation for two JVM frameworks, check for framework specific instructions: 
+Library has implementations for two JVM frameworks, check for framework specific instructions: 
 - [Spring boot](inbox-outbox-spring-boot/README.md)
 - [Quarkus](inbox-outbox-quarkus/README.md)
 

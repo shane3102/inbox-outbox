@@ -1,24 +1,33 @@
-# Inbox-Outbox - Spring
+# Inbox-Outbox - Spring boot
 
-Biblioteka wspierająca asynchroniczne odbieranie komunikatów pomiędzy serwisami z wykorzystaniem wzorca inbox/outbox dla aplikacji opartych na Springu.
-
-### Konfiguracja
+### Configuration
 <details>
-    <summary>Dependency - konfiguracja maven</summary>
+    <summary>Dependency - maven configuration</summary>
 
+Following repository has to be added:
+```xml
+<repositories>
+    <repository>
+        <id>Self hosted nexus</id>
+        <url>https://nexus.shane3102.pl/repository/maven-releases/</url>
+    </repository>
+</repositories>
 ```
+
+Dependency:
+```xml
 <dependency>
     <groupId>pl.shane3102.messaging</groupId>
-    <artifactId>inbox-outbox-spring</artifactId>
+    <artifactId>inbox-outbox-spring-boot</artifactId>
     <version>${inbox-outbox.version}</version>
 </dependency>
 ```
 </details>
 
 <details>
-    <summary>Konfiguracja beanów Spring</summary>
+    <summary>Spring bean configuration</summary>
 
-Należy zarejestrować beana `InboxOutbox`:
+Bean `InboxOutbox` has to be registered:
 ```java
 @Configuration
 public class InboxOutboxBeanConfiguration extends InboxOutboxConfiguration {
@@ -45,17 +54,17 @@ public class InboxOutboxBeanConfiguration extends InboxOutboxConfiguration {
     }
 }
 ```
-    
-Zalecana jest implementacja interfejsów `LoadMessages`, `SaveMessage` oraz `DeleteMessage`. 
-Domyślne implementacje działają na podstawie repozytorium in-memory. 
+
+It is recommended to implement interfaces `LoadMessages`, `SaveMessage` and `DeleteMessage`
+default implementations are working based on in-memory repository
     
 
 </details>
 
 <details>
-  <summary>Konfiguracja Aplikacji</summary>
+  <summary>App configuration</summary>
 
-Należy dodać adnotacje do naszej klasy odpowiadającej za stworzenie aplikacji SpringBoot
+Folowing annotation has to be present in class starting Spring boot
 
 ```java
 @EnableScheduling
@@ -63,11 +72,11 @@ Należy dodać adnotacje do naszej klasy odpowiadającej za stworzenie aplikacji
 
 </details>
 
-### Przykład użycia
+### Usage example
 
-#### Obsługa eventów z inboxa/outboxa:
+#### Inbox-outbox message handling:
 
-Wysyłanie eventów na inboxa/outboxa:
+Sending messages to be handled by inbox-outbox:
 ```java
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -87,8 +96,7 @@ public class SomeEventHandlerService {
 
 ```
 
-Obsługa eventu wysłanego na inboxa/outboxa:
-
+Handing event send to inbox-outbox:
 ```java
 import pl.messaging.inbox.annotation.MessagingAwareComponent;
 
@@ -102,7 +110,7 @@ public class SomeHandlerService {
             cron = "* * * * * *"
     )
     public void handleSomeInboxEvent(SomeInboxOutboxEvent someEvent) {
-        // implementacja - wysłanie eventu dalej lub obsłużenie eventu
+        // implementation - seding message further (outbox) or handling message and saving result (inbox)
     }
 }
 ```

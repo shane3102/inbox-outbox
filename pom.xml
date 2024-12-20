@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>inbox-outbox-commons</module>
-        <module>inbox-outbox-spring</module>
+        <module>inbox-outbox-spring-boot</module>
         <module>inbox-outbox-quarkus</module>
     </modules>
     <name>Inbox-Outbox</name>

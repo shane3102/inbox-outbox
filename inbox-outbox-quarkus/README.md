@@ -1,12 +1,20 @@
 # Inbox-Outbox - Quarkus
-
-Biblioteka wspierająca asynchroniczne odbieranie komunikatów pomiędzy serwisami z wykorzystaniem wzorca inbox/outbox dla aplikacji opartych na Quarkusie.
-
 ### Konfiguracja
 <details>
-    <summary>Dependency - konfiguracja maven</summary>
+    <summary>Dependency - maven configuration</summary>
 
+Following repository has to be added:
+```xml
+<repositories>
+    <repository>
+        <id>Self hosted nexus</id>
+        <url>https://nexus.shane3102.pl/repository/maven-releases/</url>
+    </repository>
+</repositories>
 ```
+
+Dependency:
+```xml
 <dependency>
      <groupId>pl.shane3102.messaging</groupId>
      <artifactId>inbox-outbox-quarkus</artifactId>
@@ -16,17 +24,17 @@ Biblioteka wspierająca asynchroniczne odbieranie komunikatów pomiędzy serwisa
 </details>
 
 <details>
-    <summary>Konfiguracja beanów</summary>
+    <summary>Quarkus bean configuration</summary>
 
-Zalecana jest implementacja interfejsów `LoadMessages`, `SaveMessage` oraz `DeleteMessage`.
-Domyślne implementacje działają na podstawie repozytorium in-memory.
+It is recommended to implement interfaces `LoadMessages`, `SaveMessage` and `DeleteMessage`
+default implementations are working based on in-memory repository
 
 
 </details>
 
-### Przykład użycia
+#### Inbox-outbox message handling:
 
-Obsługa eventów z inboxa/outboxa:
+Sending messages to be handled by inbox-outbox:
 
 ```java
 import org.springframework.context.event.EventListener;
@@ -46,7 +54,7 @@ public class SomeEventHandlerService {
 
 ```
 
-Obsługa eventu wysłanego na inboxa/outboxa:
+Handing event send to inbox-outbox:
 
 ```java
 @ApplicationScoped
@@ -59,7 +67,7 @@ public class SomeHandlerService {
             cron = "* * * * * *"
     )
     public void handleSomeInboxEvent(SomeInboxOutboxEvent someEvent) {
-        // implementacja - wysłanie eventu dalej lub obsłużenie eventu
+        // implementation - seding message further (outbox) or handling message and saving result (inbox)
     }
 }
 ```

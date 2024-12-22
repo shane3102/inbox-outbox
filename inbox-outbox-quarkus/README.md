@@ -1,5 +1,5 @@
 # Inbox-Outbox - Quarkus
-### Konfiguracja
+### Configuration
 <details>
     <summary>Dependency - maven configuration</summary>
 
@@ -20,7 +20,6 @@ Dependencies:
      <artifactId>inbox-outbox-quarkus</artifactId>
      <version>${inbox-outbox.version}</version>
 </dependency>
-
 
 <dependency>
     <groupId>pl.shane3102.messaging</groupId>

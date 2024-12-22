@@ -10,10 +10,6 @@
     <artifactId>inbox-outbox-quarkus</artifactId>
     <name>Inbox-Outbox Quarkus - Runtime</name>
 
-    <properties>
-        <kotlin.version>2.0.20-Beta2</kotlin.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>

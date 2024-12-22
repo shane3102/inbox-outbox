@@ -13,12 +13,19 @@ Following repository has to be added:
 </repositories>
 ```
 
-Dependency:
+Dependencies:
 ```xml
 <dependency>
      <groupId>pl.shane3102.messaging</groupId>
      <artifactId>inbox-outbox-quarkus</artifactId>
      <version>${inbox-outbox.version}</version>
+</dependency>
+
+
+<dependency>
+    <groupId>pl.shane3102.messaging</groupId>
+    <artifactId>inbox-outbox-commons</artifactId>
+    <version>${inbox-outbox.version}</version>
 </dependency>
 ```
 </details>

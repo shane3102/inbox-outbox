@@ -1,95 +1,106 @@
-package pl.shane3102.messaging.inbox.quarkus.it;
+package pl.shane3102.messaging.inbox.quarkus.it
 
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import org.junit.jupiter.api.Test;
-import pl.shane3102.messaging.inbox.quarkus.it.model.TestMessage1;
-import pl.shane3102.messaging.inbox.quarkus.it.model.TestMessage2;
-import pl.shane3102.messaging.inbox.quarkus.it.model.TestMessage3;
-import pl.shane3102.messaging.inbox.quarkus.it.model.TestMessageFailing;
-import pl.shane3102.messaging.inbox.quarkus.it.service.TestInboxMessageService;
-import pl.shane3102.messaging.model.Message;
-import pl.shane3102.messaging.quarkus.runtime.aggregator.InboxOutbox;
-import pl.shane3102.messaging.quarkus.runtime.annotation.MessagingAwareComponent;
-import pl.shane3102.messaging.repository.LoadMessages;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import io.quarkus.test.junit.QuarkusTest
+import jakarta.enterprise.inject.Any
+import jakarta.inject.Inject
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import pl.shane3102.messaging.inbox.quarkus.it.model.TestMessage1
+import pl.shane3102.messaging.inbox.quarkus.it.model.TestMessage2
+import pl.shane3102.messaging.inbox.quarkus.it.model.TestMessage3
+import pl.shane3102.messaging.inbox.quarkus.it.model.TestMessageFailing
+import pl.shane3102.messaging.inbox.quarkus.it.service.TestInboxMessageService
+import pl.shane3102.messaging.model.Message
+import pl.shane3102.messaging.quarkus.runtime.aggregator.InboxOutbox
+import pl.shane3102.messaging.repository.LoadMessages
+import java.util.UUID
+import java.util.function.Consumer
 
 @QuarkusTest
-public class InboxTest {
+class InboxTest {
+    @Inject
+    var inboxOutbox: InboxOutbox? = null
+
+    @Any
+    @Inject
+    var testInboxMessageService: TestInboxMessageService? = null
 
     @Inject
-    InboxOutbox inboxOutbox;
-
-    @Inject
-    @MessagingAwareComponent
-    TestInboxMessageService testInboxMessageService;
-
-    @Inject
-    LoadMessages loadMessages;
+    var loadMessages: LoadMessages? = null
 
     @Test
-    public void inboxSimpleTest() {
+    fun inboxSimpleTest() {
         // given
-        List<Message> sentMessages = List.of(new TestMessage3(), new TestMessage3(), new TestMessage2(), new TestMessageFailing(), new TestMessage1());
-        Map<Class<? extends Message>, Integer> expectedCountByMessage = Map.of(TestMessage3.class, 2, TestMessage2.class, 1, TestMessageFailing.class, 0, TestMessage1.class, 1);
+        val sentMessages = listOf(TestMessage3(), TestMessage3(), TestMessage2(), TestMessageFailing(), TestMessage1())
+        val expectedCountByMessage = mapOf(
+            TestMessage3::class.java to 2,
+            TestMessage2::class.java to 1,
+            TestMessageFailing::class.java to 0,
+            TestMessage1::class.java to 1
+        )
 
         // when
-        sentMessages.forEach(inboxOutbox::saveMessage);
+        sentMessages.forEach(Consumer { inboxMessage: Message? ->
+            inboxOutbox!!.saveMessage(
+                inboxMessage!!
+            )
+        })
         try {
-            Thread.sleep(1100);
-        } catch (Exception ignored) {
+            Thread.sleep(1100)
+        } catch (ignored: Exception) {
         }
 
         // then
-
-        expectedCountByMessage.forEach((inboxMessageType, expectedCount) -> {
-            Integer realCount = testInboxMessageService.executeCountByInbox.get(inboxMessageType);
-            assertEquals(expectedCount, realCount, "Count for class %s not equal expected. Real count: %s, Expected count: %s".formatted(inboxMessageType, realCount, expectedCount));
-        });
-
+        expectedCountByMessage.forEach { (inboxMessageType: Class<out Message>?, expectedCount: Int?) ->
+            val realCount = testInboxMessageService!!.executeCountByInbox[inboxMessageType]
+            Assertions.assertEquals(
+                expectedCount,
+                realCount,
+                "Count for class $inboxMessageType not equal expected. Real count: $realCount, Expected count: $expectedCount"
+            )
+        }
     }
 
     @Test
-    public void shouldHaveExpectedCountOfRetryOnFailingInboxMessage() {
-        testInboxMessageService.resetCount();
-        UUID id = UUID.randomUUID();
+    fun shouldHaveExpectedCountOfRetryOnFailingInboxMessage() {
+        testInboxMessageService!!.resetCount()
+        val id = UUID.randomUUID()
 
-        inboxOutbox.saveMessage(new TestMessageFailing(id));
+        inboxOutbox!!.saveMessage(TestMessageFailing(id))
         try {
-            Thread.sleep(1500);
-        } catch (Exception ignored) {
+            Thread.sleep(1500)
+        } catch (ignored: Exception) {
         }
 
-        List<Message> failingMessages = loadMessages.loadLatestByTypeNonExpired(TestMessageFailing.class.toString(), 5, 5);
-        Message sentInboxMessage = failingMessages.stream().filter(failingInboxMessage -> Objects.equals(failingInboxMessage.getId(), id)).findFirst().orElseThrow(AssertionError::new);
+        val failingMessages = loadMessages!!.loadLatestByTypeNonExpired(
+            TestMessageFailing::class.java.toString(), 5, 5
+        )
+        val sentInboxMessage =
+            failingMessages.stream().filter { failingInboxMessage: Message -> failingInboxMessage.id == id }
+                .findFirst().orElseThrow { AssertionError() }
 
-        assertTrue(sentInboxMessage.getRetryCount() >= 1, "Expected to have at least one in retry count");
-        assertTrue(sentInboxMessage.getRetryCount() <= 3, "Expected to have at most 3 in retry count");
-
+        Assertions.assertTrue(sentInboxMessage.retryCount >= 1, "Expected to have at least one in retry count")
+        Assertions.assertTrue(sentInboxMessage.retryCount <= 3, "Expected to have at most 3 in retry count")
     }
 
     @Test
-    public void shouldHaveExpectedCountOfRetryWithMaxValueOnFailingInboxMessage() {
-        testInboxMessageService.resetCount();
-        UUID id = UUID.randomUUID();
+    fun shouldHaveExpectedCountOfRetryWithMaxValueOnFailingInboxMessage() {
+        testInboxMessageService!!.resetCount()
+        val id = UUID.randomUUID()
 
-        inboxOutbox.saveMessage(new TestMessageFailing(id));
+        inboxOutbox!!.saveMessage(TestMessageFailing(id))
         try {
-            Thread.sleep(5000);
-        } catch (Exception ignored) {
+            Thread.sleep(5000)
+        } catch (ignored: Exception) {
         }
 
-        List<Message> failingMessages = loadMessages.loadLatestByTypeNonExpired(TestMessageFailing.class.toString(), 5, 5);
-        Message sentMessage = failingMessages.stream().filter(failingInboxMessage -> Objects.equals(failingInboxMessage.getId(), id)).findFirst().orElseThrow(AssertionError::new);
+        val failingMessages = loadMessages!!.loadLatestByTypeNonExpired(
+            TestMessageFailing::class.java.toString(), 5, 5
+        )
+        val sentMessage =
+            failingMessages.stream().filter { failingInboxMessage: Message -> failingInboxMessage.id == id }
+                .findFirst().orElseThrow { AssertionError() }
 
-        assertEquals(3, sentMessage.getRetryCount(), "Expected to have exactly 3 in retry count");
-
+        Assertions.assertEquals(3, sentMessage.retryCount, "Expected to have exactly 3 in retry count")
     }
-
 }

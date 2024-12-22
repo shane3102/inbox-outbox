@@ -1,4 +1,4 @@
-package pl.messaging.quarkus.test
+package pl.shane3102.messaging.quarkus.test
 
 import io.quarkus.test.QuarkusUnitTest
 import org.jboss.shrinkwrap.api.ShrinkWrap

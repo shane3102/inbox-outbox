@@ -1,11 +1,7 @@
-package pl.shane3102.messaging.inbox.quarkus.it.model;
+package pl.shane3102.messaging.inbox.quarkus.it.model
 
-import java.time.OffsetDateTime;
-import java.util.UUID;
-import pl.shane3102.messaging.model.Message;
+import pl.shane3102.messaging.model.Message
+import java.time.OffsetDateTime
+import java.util.*
 
-public class TestMessage2 extends Message {
-    public TestMessage2() {
-        super(UUID.randomUUID(), 0, OffsetDateTime.now());
-    }
-}
+class TestMessage2 : Message(UUID.randomUUID(), 0, OffsetDateTime.now())

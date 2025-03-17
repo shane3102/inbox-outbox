@@ -8,13 +8,13 @@ Library has implementations for two JVM frameworks, check for framework specific
 
 ### Deployment
 
-Library is deployed to following nexus repository: https://nexus.shane3102.pl. 
+Library is deployed to following reposilite repository: https://reposilite.shane3102.pl. 
 In order to deploy new version you need 
-to define username and password for specified nexus in `./.m2/settings.xml` file
+to define username and password for specified reposilite in `./.m2/settings.xml` file
 ```xml
     <servers>
         <server>
-            <id>Self hosted nexus</id>
+            <id>Self hosted reposilite</id>
             <username>actual_username</username>
             <password>actual_password</password>
         </server>

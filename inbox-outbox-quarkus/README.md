@@ -7,8 +7,8 @@ Following repository has to be added:
 ```xml
 <repositories>
     <repository>
-        <id>Self hosted nexus</id>
-        <url>https://nexus.shane3102.pl/repository/maven-releases/</url>
+        <id>Self hosted reposilite</id>
+        <url>https://reposilite.shane3102.pl/releases</url>
     </repository>
 </repositories>
 ```
